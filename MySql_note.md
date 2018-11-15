@@ -66,7 +66,7 @@ drop table user
 
 
 
-##DML数据操作语句
+## DML数据操作语句
 
 插入数据
 
@@ -95,7 +95,7 @@ delete from user where name='张胜'`
 
  
 
-##DQL数据提取
+## DQL数据提取
 
 条件查询
 
