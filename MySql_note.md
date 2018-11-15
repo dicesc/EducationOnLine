@@ -163,7 +163,8 @@ select department,group_concat(salary),sum(salary) from user group by department
 -- Having
 select department,sum(salary) from user group by department having sum(salary) >= 9000 
 -- 查询工资总和大于9000的部门名称      主要用于先分组以后处理的动作使用 having
-select department,sum(salary) from user where salary>2000 group by department having sum(salary)>6000 order by sum(salary) desc   -- 查询工资大于2000,工资总和大于6000的部门名称以及工资和 并且按照工资总和降序排列
+select department,sum(salary) from user where salary>2000 group by department having sum(salary)>6000 order by sum(salary) desc   
+-- 查询工资大于2000,工资总和大于6000的部门名称以及工资和 并且按照工资总和降序排列
 
 -- limit
 select * from user limit 0,3    -- 0为开始的位置  3为一共有3条数据, 实际为分页查询
@@ -221,7 +222,8 @@ select * from user limit 0,3    -- 0为开始的位置  3为一共有3条数据,
 - 建立表与表的一种关系(外键)
 
   ```sql
-  create table score(id int, score int, p_id int, constraint sc_person foreign key(p_id) refrences person(id) )  -- sc_person 为约束的名称(可以省略不写) score表中的p_id依赖于 person中的id
+  create table score(id int, score int, p_id int, constraint sc_person foreign key(p_id) refrences person(id) )  
+  -- sc_person 为约束的名称(可以省略不写) score表中的p_id依赖于 person中的id
   ```
 
 
@@ -381,8 +383,6 @@ select e1.empno,e2.empno from emp e1,emp e2 where e1.mgr = e2.empno
 
 ## 事务
 
-介绍
-
 mysql默认开启事务, 每个语句都是一个事务
 
 - 原子性
@@ -438,4 +438,56 @@ grant insert,update,select on *.* to myxq@localhost identified by '1234' -- 只�
 show grants for myxq@localhost -- 查看指定用户的权限
 revoke insert,update ON *.* from myxq@localhost  --删除指定用户的指定权限
 ```
+
+
+
+## 视图
+
+视图: 一个虚拟表,就是一个查询结果 保存起来 
+
+创建视图
+
+- Merge 替换试创建 —— 修改视图数据,会直接修改真实数据
+
+  执行语句时候 会隐士转换为 对原有的表进行操作的sql语句
+
+- ```
+  create view ALGORITHM = MERGE emp_salary_view as (select * from emp where salary > 2000) 
+  -- ALGORITHM = MERGE 可以不写 默认就是按照这个方式创建
+  create view emp_salary_view as (select * from emp where salary > 2000) with check option
+  -- with check option 表示更新视图的时候 条件必须满足,如果不满足 不容许更新
+  ```
+
+- Temptable 具化试创建 
+
+  在内存中临时创建了一个新的视图表  操作的时候直接对新的视图操作
+
+  ```
+  
+  ```
+
+- Undefined
+
+使用视图—— 增,删,改,查
+
+```sql
+select * from emp_salary_view where job = '经理'
+```
+
+修改视图
+
+```sql
+create or replace view emp_salary_view as (select * from emp)
+-- 只要视图数据不来源于基表 那么视图更改就不能影响基表数据
+```
+
+删除视图
+
+```sql
+drop view emp_salary_view
+```
+
+
+
+##  存储过程
 
